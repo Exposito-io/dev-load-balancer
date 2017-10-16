@@ -23,3 +23,6 @@ else
 fi
 
 echo "Added dev hosts to /etc/hosts"
+
+docker build -t dev-exposito-load-balancer .
+docker run -e "DOCKER_HOST=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" -d --name dev-exposito-load-balancer -p 80:80 dev-exposito-load-balancer
