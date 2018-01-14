@@ -1,3 +1,9 @@
+if grep -q "dev.exposito.io" /etc/hosts; then
+    echo "dev.exposito.io already exists"
+else
+    echo "127.0.0.1 dev.exposito.io" >> /etc/hosts;
+fi
+
 if grep -q "dev.login.exposito.io" /etc/hosts; then
     echo "dev.login.exposito.io already exists"
 else
@@ -24,5 +30,7 @@ fi
 
 echo "Added dev hosts to /etc/hosts"
 
+docker stop dev-exposito-load-balancer
+docker rm dev-exposito-load-balancer
 docker build -t dev-exposito-load-balancer .
 docker run -e "DOCKER_HOST=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" -d --name dev-exposito-load-balancer -p 80:80 dev-exposito-load-balancer
